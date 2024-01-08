@@ -18,18 +18,35 @@ These are some pointers that I would need to look into and brake down even furth
 - What do I do about caching? Is this some middleware I'll be creating, Hono only has one for Deno and Cloudflare
 
 ## TODO
-These the points I need to research futher.
+These the points I need to research futher. Keep in mind this is a opinionated fullstack application. This project is divided into two parts one for creating the package with core functionality like Island Architecture, file based routing and maybe database management, and then src folder that has the general file structure of how to use the framework.
+
+### Package
+- [ ] Research on how to provide Island architecture to web-component or client side scripting with out having to re-implement `<client-islands src="my-components" client:load></client-islands>` again.
+    - I read something in [Islands.js](https://islandjs.dev/en/guide/islands-arch) might need to write something with the build times or run times.
+    - Implement the idea I got from [SonikJS](https://github.com/sonikjs/sonik/blob/main/src/client/client.ts). Looks a lot like my implementation of `<client-islands></client-islands>`
+    - [ ] Implement the client directive 
+        - querySelectAll Web Components and see if they have the client attributes and from there yeah.
 - [ ] Research what router to use and try and implement it.
-    - These, [1](https://www.youtube.com/watch?v=fYQftxb9xTg) & [2](https://www.youtube.com/watch?v=DrP8gIpwkUg&t=965s) videos put it well into perspective, what is it that I want to solve with a file based router and how well does it play along with HTMX. The purpose of this framework is to work with HTMX and HTMX needs rest end points to shine. So if each file represents a route I would then most likely have a equivalent file with all of the CRUD-operation (a controller) end points with the same route name. Having a file based routing system might lead to a redundant DX so a pseudo filed based routing, like creating maps and files and then naming the routes after them? I'm mimicking file based routing but in actuality creating a page based router.
-    - **Conclusion:** Page based routing with file based named routing, controllers for handling api end points
+    - These, [1](https://www.youtube.com/watch?v=fYQftxb9xTg) & [2](https://www.youtube.com/watch?v=DrP8gIpwkUg&t=965s) videos put it well into perspective, what is it that I want to solve with a file based router and how well does it play along with HTMX. The purpose of this framework is to work with HTMX and HTMX needs rest end points to shine. So if each file represents a route I would then most likely have a equivalent file with all of the CRUD-operation (a controller) end points with the same route name. Either way I'll provide two solutions, one with filed based routing and another with path based routing
+    - [ ] Implement file based routing
+    - [ ] "Implement" page based routing
 - [ ] Database integration (SQLite)
     - How can I ensure that the db is persisted throughout the application? Do I need to create a context file that keeps track of it? Like with bindings and then call it via `c.var.db` or `c.env.db`
+    - What kind of database would I integrate and where would I host it + how well can I secure it? I could use something like Turso, I like SQLite. But the question remains how can I can I use it without an ORM, I know that Cloudflare also has it's own SQLite db called D1. Check out how they can be implemented and depending on how easy it is I might leave the choice of database up to the user.
+    - [ ] Integrate Turso with node
+    - [ ] Integrate-ish Cloudflare with node
+    - [ ] No database option, leave it to the user
+- [ ] How do I create a CLI or npm package so that people can create their projects
+
+### Starting folder
 - [ ] Type safety when working with HTML elements using htmx
     - I actually found this when checking out the [BETH stack](https://github.com/ethanniser/beth-b2b-saas/blob/main/src/types/htmx.d.ts), might add some improvements to this when adding dynamic
-- [ ] Research on how to provide Island architecture to web-component or client side scripting with out having to re-implement <client-islands src="my-components" client:load></client-islands> again.
-    - I read something in [Islands.js](https://islandjs.dev/en/guide/islands-arch) might need to write something with the build times or run times.
+- [ ] Leave the user to handle database management.
+- [ ] T3.gg config maybe?
+- [ ] Vite config for building the web components i.e production vs development
 - [ ] Deployment
-    - Vite
+    - [ ] Docker
+    - [ ] Maybe Cloudflare workers
     
 ## Folder path Ideas
 Display of how the file structure could look like based on what type of routing is used
@@ -37,13 +54,13 @@ Display of how the file structure could look like based on what type of routing 
 ```txt
 .
 ├── app
-│   ├── lib // reusable components
-│   │   ├── Button.tsx
-│   │   └── Navbar.tsx
 │   ├── client.ts // client entry file
 │   ├── Island.ts // Astro Client Directives
 │   ├── islands
 │   │   └── counter.ts // island component
+│   ├── components // reusable components
+│   │   ├── Button.tsx
+│   │   └── Navbar.tsx
 │   ├── routes
 │   │   ├── _404.tsx // not found page
 │   │   ├── _error.tsx // error page
@@ -67,9 +84,66 @@ Display of how the file structure could look like based on what type of routing 
 ├── app
 │   ├── client //All client side scripting files
 │   │   ├── client.ts // client entry file
-│   │   ├── Island.ts // Astro Client Directives
+│   │   ├── Island.ts // Astro Client Directives (Subject to change)
 │   │   └── islands
 │   │       └── counter.ts // web components
+│   └── server
+│       ├── components //Common reusable component
+│       │   ├── Button.tsx
+│       │   └── Navbar.tsx
+│       ├── controllers // api controllers.
+│       │   └── login.tsx // login api controller
+│       ├── pages // each page would be represented as it's own route end point along with it's own HTMX operations + Web components 
+│       │   ├── _404.tsx // not found page
+│       │   ├── _error.tsx // error page
+│       │   ├── _layout.tsx // layout template for JSXRender
+│       │   ├── about.tsx // matches `/about/:name` and renders a html file that way
+│       │   └── index.tsx // this would have the `/` end point for example i.e our homepage
+│       └── server.tsx // server entry file with endpoint for each page
+├── package.json
+├── public
+│   └── favicon.ico
+├── tsconfig.json
+└── vite.config.ts
+```
+
+### Updated file path ideas
+This is dependent on how well I implement the idea for my client directives!
+
+*Updated File based routing:*
+```txt
+.
+├── app
+│   ├── client.ts // client entry file
+│   ├── islands
+│   │   └── counter.ts // island component
+│   ├── components // reusable components
+│   │   ├── Button.tsx
+│   │   └── Navbar.tsx
+│   ├── routes
+│   │   ├── _404.tsx // not found page
+│   │   ├── _error.tsx // error page
+│   │   ├── _layout.tsx // layout template
+│   │   ├── about
+│   │   │   └── [name].tsx // matches `/about/:name`
+│   │   └── index.tsx // matches `/`
+│   ├── controllers // api controllers.
+│   │   └── login.tsx // login api controller
+│   └── server.ts // server entry file
+├── package.json
+├── public
+│   └── favicon.ico
+├── tsconfig.json
+└── vite.config.ts
+```
+
+*Updated Normal routing:*
+```txt
+.
+├── app
+│   ├── client.ts // client entry file
+│   ├── islands // depending on how well the implementation of client directive goes 
+│   │   └── counter.ts // island component
 │   └── server
 │       ├── components //Common reusable component
 │       │   ├── Button.tsx
