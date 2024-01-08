@@ -23,16 +23,15 @@ These the points I need to research futher. Keep in mind this is a opinionated f
 ### Package
 - [ ] Research on how to provide Island architecture to web-component or client side scripting with out having to re-implement `<client-islands src="my-components" client:load></client-islands>` again.
     - I read something in [Islands.js](https://islandjs.dev/en/guide/islands-arch) might need to write something with the build times or run times.
-    - Implement the idea I got from [SonikJS](https://github.com/sonikjs/sonik/blob/main/src/client/client.ts). Looks a lot like my implementation of `<client-islands></client-islands>`
-    - [ ] Implement the client directive 
-        - querySelectAll Web Components and see if they have the client attributes and from there yeah.
+    - Implement the idea I got from [SonikJS](https://github.com/sonikjs/sonik/blob/main/src/client/client.ts). Looks a lot like my implementation of `<client-islands></client-islands>` take inspo from here and see if you can querySelectAll Web Components before they've been loaded in and then process client directives that way.
+    - [ ] Implement the client directive.
 - [ ] Research what router to use and try and implement it.
-    - These, [1](https://www.youtube.com/watch?v=fYQftxb9xTg) & [2](https://www.youtube.com/watch?v=DrP8gIpwkUg&t=965s) videos put it well into perspective, what is it that I want to solve with a file based router and how well does it play along with HTMX. The purpose of this framework is to work with HTMX and HTMX needs rest end points to shine. So if each file represents a route I would then most likely have a equivalent file with all of the CRUD-operation (a controller) end points with the same route name. Either way I'll provide two solutions, one with filed based routing and another with path based routing
-    - [ ] Implement file based routing
+    - These, [1](https://www.youtube.com/watch?v=fYQftxb9xTg) & [2](https://www.youtube.com/watch?v=DrP8gIpwkUg&t=965s) videos put it well into perspective, what is it that I want to solve with a file based router and how well does it play along with HTMX. The purpose of this framework is to work with HTMX and HTMX needs rest end points to shine. I could provide a controllers folder that has all the API end points but if for some reason people want CRUD operations in the same file that would pose an issue. But either way I'll provide two solutions, the controllers folder will then act as the api end point for our for both the filed based one and path based one.
+    - [ ] Implement file based routing, information links: [File-base routing #1277](https://github.com/honojs/hono/issues/1277), 
     - [ ] "Implement" page based routing
 - [ ] Database integration (SQLite)
-    - How can I ensure that the db is persisted throughout the application? Do I need to create a context file that keeps track of it? Like with bindings and then call it via `c.var.db` or `c.env.db`
-    - What kind of database would I integrate and where would I host it + how well can I secure it? I could use something like Turso, I like SQLite. But the question remains how can I can I use it without an ORM, I know that Cloudflare also has it's own SQLite db called D1. Check out how they can be implemented and depending on how easy it is I might leave the choice of database up to the user.
+    - How can I ensure that the db is persisted throughout the application? Do I need to create a context file that keeps track of it? Like with bindings and then call it via `c.var.db` or `c.env.db`. Hono can have [both](https://github.com/honojs/hono/blob/main/src/types.ts#L17) bindings for cloudflare and then Variables for other things which then provides a global context.
+    - What kind of database would I integrate and where would I host it + how well can I secure it? This could be left to the user to create their own solutions but I could also use something like Turso, I really like SQLite. I can also provide integration of Cloudflare's own SQLite db. I need to check out how they can be implemented and set up by the user. I don't want to work with ORMs, I can maybe provide support for drizzle and prisma but I don't think so, I prefer raw SQL.
     - [ ] Integrate Turso with node
     - [ ] Integrate-ish Cloudflare with node
     - [ ] No database option, leave it to the user
@@ -41,7 +40,6 @@ These the points I need to research futher. Keep in mind this is a opinionated f
 ### Starting folder
 - [ ] Type safety when working with HTML elements using htmx
     - I actually found this when checking out the [BETH stack](https://github.com/ethanniser/beth-b2b-saas/blob/main/src/types/htmx.d.ts), might add some improvements to this when adding dynamic
-- [ ] Leave the user to handle database management.
 - [ ] T3.gg config maybe?
 - [ ] Vite config for building the web components i.e production vs development
 - [ ] Deployment
