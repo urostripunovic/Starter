@@ -27,7 +27,7 @@ These the points I need to research futher. Keep in mind this is a opinionated f
     - [ ] Implement the client directive.
 - [ ] Research what router to use and try and implement it.
     - These, [1](https://www.youtube.com/watch?v=fYQftxb9xTg) & [2](https://www.youtube.com/watch?v=DrP8gIpwkUg&t=965s) videos put it well into perspective, what is it that I want to solve with a file based router and how well does it play along with HTMX. The purpose of this framework is to work with HTMX and HTMX needs rest end points to shine. I could provide a controllers folder that has all the API end points but if for some reason people want CRUD operations in the same file that would pose an issue. But either way I'll provide two solutions, the controllers folder will then act as the api end point for our for both the filed based one and path based one.
-    - [ ] Implement file based routing, information links: [File-base routing #1277](https://github.com/honojs/hono/issues/1277), 
+    - [ ] Implement file based routing, information links: [File-base routing #1277](https://github.com/honojs/hono/issues/1277), [Vite plug in](https://github.com/hannoeru/vite-plugin-pages), [Vike](https://vike.dev/routing)
     - [ ] "Implement" page based routing
 - [ ] Database integration (SQLite)
     - How can I ensure that the db is persisted throughout the application? Do I need to create a context file that keeps track of it? Like with bindings and then call it via `c.var.db` or `c.env.db`. Hono can have [both](https://github.com/honojs/hono/blob/main/src/types.ts#L17) bindings for cloudflare and then Variables for other things which then provides a global context.
